@@ -1,0 +1,33 @@
+import db from "../database.js";
+
+export async function getUser(id) {
+	return await db.getrow('SELECT * FROM users WHERE id = ?', [id]);
+}
+
+export async function getUserByEmail(email) {
+	return await db.getrow('SELECT id, email, last_name, first_name, is_admin FROM users WHERE email = ?', [email]);
+}
+
+export async function getUserPasswordByEmail(email) {
+	return await db.getrow('SELECT password FROM users WHERE email = ?', [email]);
+}
+
+export async function getUserByLast_name(last_name) {
+	return await db.getrow('SELECT id, email, last_name, first_name, is_admin FROM users WHERE last_name = ?', [last_name]);
+}
+
+export async function getUserByFirst_name(first_name) {
+	return await db.getrow('SELECT id, email, last_name, first_name, is_admin FROM users WHERE last_name = ?', [first_name]);
+}
+
+export async function createUser(email, last_name, first_name, password) {
+	return await db.insert('INSERT INTO users (email, last_name, first_name, password) VALUES (?, ?, ?, ?)', [email, last_name, first_name, password]);
+}
+
+export async function updateUser(email, last_name, first_name, oldEmail) {
+	return await db.insert('UPDATE users SET email=?, last_name=?, first_name=? WHERE email=?', [email, last_name, first_name, oldEmail]);
+}
+
+export async function uptadeUserWithPassword(email, last_name, first_name, password, oldEmail) {
+	return await db.insert('UPDATE users SET email=?, last_name=?, first_name=?, password=? WHERE email=?', [email, last_name, first_name, password, oldEmail]);
+}
