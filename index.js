@@ -5,11 +5,32 @@ import swaggerUi from "swagger-ui-express";
 import cookieParser from "cookie-parser";
 
 const options = {
-		definition: {
-				openapi: "3.0.0",
+	definition: {
+		openapi: "3.0.0",
 		info: {
-				title: "Hello!",
-				version: "1.0.0",
+			title: "Hello!",
+			version: "1.0.0",
+		},
+		servers: [{ url: "/api" }],
+		components: {
+			securitySchemes: {
+				oauth2: {
+					type: "oauth2",
+					flows: {
+						password: {
+							tokenUrl: "/api/auth/login",
+						},
+					},
+				},
+				bearerAuth: {
+					type: "http",
+					scheme: "bearer",
+					bearerFormat: "JWT",
+				},
+				security: {
+					bearerAuth: [],
+				},
+			},
 		},
 	},
 	apis: ["router.js"],
@@ -21,8 +42,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api", router);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
-app.use('/uploads', express.static("uploads"))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiSpecification));
+app.use("/uploads", express.static("uploads"));
 
 app.listen(3333);
 

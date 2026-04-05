@@ -1,12 +1,12 @@
 -- Active: 1762039394514@@127.0.0.1@3306@framelab
 CREATE TABLE users (
     id                  INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    email               VARCHAR(255) NOT NULL,
+    email               VARCHAR(255) NOT NULL UNIQUE,
     password            VARCHAR(255) NOT NULL,
     last_name           VARCHAR(255) NOT NULL,
     first_name          VARCHAR(255) NOT NULL,
     is_admin            BOOLEAN DEFAULT FALSE,
-    insciption_date     DATETIME DEFAULT NOW()
+    inscription_date     DATETIME DEFAULT NOW()
 );
 
 CREATE TABLE challenges (
@@ -18,7 +18,7 @@ CREATE TABLE challenges (
     end_date            DATETIME DEFAULT NOW(),
     is_active           BOOLEAN DEFAULT TRUE,
     creator_id          INT NOT NULL REFERENCES users(id)
-); 
+);
 
 CREATE TABLE participations (
     id                  INT PRIMARY KEY AUTO_INCREMENT,
@@ -44,5 +44,6 @@ CREATE TABLE votes (
     respect_theme_note  TINYINT(3) UNSIGNED,
     created             DATETIME DEFAULT NOW(),
     user_id             INT NOT NULL REFERENCES users(id),
-    participation_id    INT NOT NULL REFERENCES participations(id)
+    participation_id    INT NOT NULL REFERENCES participations(id),
+    UNIQUE(user_id, participation_id) -- User can vote only one time for one participation
 );

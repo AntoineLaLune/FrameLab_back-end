@@ -1,32 +1,35 @@
 import * as participationsModel from "../model/participations.js";
 
-export async function getAllParticipations(req, resp) {
-		const data = await participationsModel.getAllParticipations();
-		resp.json({
-				success: true,
-				participations: data
-		})
+// GET
+export async function getParticipations(req, resp) {
+	const data = await participationsModel.getParticipations(req?.query?.user_id, req?.query?.challenge_id, req?.query?.limit, req?.query?.offset, req?.query?.created, req?.query?.rand);
+	resp.json({
+		success: true,
+		participations: data,
+	});
 }
-
 export async function getParticipation(req, resp) {
-		const data = await participationsModel.getParticipation(req.params.id);
-		resp.json({
-				success: true,
-				participations: data
-		})
+	const data = await participationsModel.getParticipation(req.params.id);
+	console.log(data);
+	resp.json({
+		success: true,
+		participations: data
+	});
 }
 
-export async function deleteParticipation(req, resp) {
-		const data = await participationsModel.removeParticipation(req.params.id);
-		resp.json({
-				success: true,
-		})
-}
-
+// POST
 export async function postParticipation(params) {
-		const data = await participationsModel.addParticipation(req.params.photo_url, req.params.challenge_id, req.params.user_id);
-		resp.json({
-				success: true,
-				participations: data
-		})
+	const data = await participationsModel.addParticipation(req.params.photo_url, req.params.challenge_id, req.params.user_id);
+	resp.json({
+		success: true,
+		participations: data
+	});
+}
+
+// DEL
+export async function deleteParticipation(req, resp) {
+	await participationsModel.removeParticipation(req.params.id);
+	resp.json({
+		success: true
+	});
 }

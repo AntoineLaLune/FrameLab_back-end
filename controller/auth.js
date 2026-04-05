@@ -5,30 +5,32 @@ import * as usersModel from "../model/users.js";
 import * as usersUtils from "../utils/users.js";
 
 export async function authByLogin(req, resp) {
-	// Verify email format
+	// Verify format
 	const emailVerifFormResp = await usersUtils.verifyEmailFormat(req.body.email);
-	if (!emailVerifFormResp.success) {return resp.json(emailVerifFormResp);}
+	if (!emailVerifFormResp.success) {return resp.status(401).json(emailVerifFormResp);}
 
-	// Check email exist
+	// Verify exist
 	const emailSlotFree = await usersUtils.checkEmailExist(req.body.email);
-	if (!emailSlotFree.success) {return resp.json(emailSlotFree);} // Return l'erreur ainsi que le message qui vient avec
+	if (!emailSlotFree.success) {return resp.status(401).json(emailSlotFree);} // Return l'erreur ainsi que le message qui vient avec
 
-	// Check password is correct
+	// Verify correct
 	const passwordIsValid = await usersUtils.checkPassword(req.body.password, req.body.email);
-	if (!passwordIsValid.success) {return resp.json(passwordIsValid);}
+	if (!passwordIsValid.success) {return resp.status(401).json(passwordIsValid);}
 
-	const userData = await usersModel.getUserByEmail(req.body.email);
-	const token = jwt.sign({ id: userData.id }, process.env.SECRET_KEY, { expiresIn: "2 days" }); // Renvoie le token valide pour 2 jours
+	const data = await usersModel.getUserByEmail(req.body.email);
+	// Return the token, valid for 30 days
+	const token = jwt.sign({ id: data.id }, process.env.SECRET_KEY, { expiresIn: "30d" });
 	resp.cookie("session", token, { maxAge: 1000 * 60 * 60 * 24 * 2 });
 	resp.json({
 		success: true,
-		userData: userData
+		data: data
 	});
 }
 
 
 export async function authBySession(req, resp, next) {
-	if (!req.header("Authorization") && !req.cookies.session) { // Vérifie si le token est présent dans les cookies ou dans les header Authorization
+	// Verify if token exist in the cookies or header authorization
+	if (!req.header("Authorization") && !req.cookies.session) {
 		return resp.status(401).json({
 			success: false,
 			message: "Session non reçus."
@@ -36,12 +38,14 @@ export async function authBySession(req, resp, next) {
 	}
 
 	let token
-	if (req.cookies.session) { // Prend le token depuis les cookies ou depuis les header Authorization
+	// Get the token
+	if (req.cookies.session) {
 		token = req.cookies.session;
 	} else { token = req.header("Authorization").split(" ")[1]; }
 
 	let tokenData
-	try { // Vérifie si le token est valide à partir de la clé secrète
+	// Verify if the token is valid with the secret key
+	try {
 		tokenData = jwt.verify(token, process.env.SECRET_KEY);
 	} catch (err) {
 		return resp.status(401).json({
@@ -50,45 +54,90 @@ export async function authBySession(req, resp, next) {
 		});
 	}
 
-	const userData = await usersModel.getUser(tokenData.id);
-	if (!userData) { // Vérifie si l'user lié au token existe toujours
+	// Verify if the user link to the token still exist
+	const data = await usersModel.getUser(tokenData.id);
+	if (!data) {
 		return resp.status(401).json({
 			success: false,
 			message: "L'utilisateur n'est pas trouvé."
 		});
 	}
 
-	// Prépare les objets pour le controller suivant
-	req.email = userData.email;
+	// Prepare object of the next constroller
+	req.user = data;
 	next();
 }
 
 export async function authByRegister(req, resp) {
-	// Verify email Format
+	// Verify formats
 	const emailVerifFormResp = await usersUtils.verifyEmailFormat(req.body.email);
 	if (!emailVerifFormResp.success) {return resp.json(emailVerifFormResp);}
 
-	// Verify password Format
 	const PasswordVerifFormResp = await usersUtils.verifyPasswordFormat(req.body.password);
 	if (!PasswordVerifFormResp.success) {return resp.json(PasswordVerifFormResp);}
 
-	// Verify last name format
 	const lastNameVerifFormResp = await usersUtils.verifyNameFormat(req.body.lastName);
 	if (!lastNameVerifFormResp.success) {return resp.json(lastNameVerifFormResp);}
 
-	// Verify first name format
 	const firstNameVerifFormResp = await usersUtils.verifyNameFormat(req.body.firstName);
 	if (!firstNameVerifFormResp.success) {return resp.json(firstNameVerifFormResp);}
-	
+
 	// Create the user
 	const pwsHash = await bcrypt.hash(req.body.password, 12)
 	await usersModel.createUser(req.body.email, req.body.lastName, req.body.firstName, pwsHash);
 
-	const userData = await usersModel.getUserByEmail(req.body.email);
-	const token = jwt.sign({ id: userData.id }, process.env.SECRET_KEY, { expiresIn: "2 days" }); // Renvoie le token valide pour 2 jours
-	resp.cookie("session", token, { maxAge: 1000 * 60 * 60 * 24 * 2 });
+	const data = await usersModel.getUserByEmail(req.body.email);
+	// Create a token, valid for 1 hour
+	jwt.sign({ id: data.id }, process.env.SECRET_KEY, { expiresIn: "1h" });
 	resp.json({
 		success: true,
-		userData: userData
+	});
+}
+
+export async function authVerify(req, resp) { // @TODO NOW
+	let token;
+	// Get the token
+	if (req.query.token) {
+		token = req.query.token
+	} else {
+		return resp.status(401).json({
+			success: false,
+			message: "Le token est introuvable."
+		});
+	}
+
+	let tokenData
+	// Verify if the token is valid with the secret key
+	try {
+		tokenData = jwt.verify(token, process.env.SECRET_KEY);
+	} catch (err) {
+		resp.status(401).json({
+			success: false,
+			message: "Session invalide."
+		});
+		return;
+	}
+
+	// Verify if the user link to the token still exist
+	const data = await usersModel.getUser(tokenData.id);
+	if (!data) {
+		return resp.status(401).json({
+			success: false,
+			message: "L'utilisateur n'est pas trouvé."
+		});
+	}
+
+	// Return the token, valid for 30 days
+	token = jwt.sign({ id: data.id }, process.env.SECRET_KEY, { expiresIn: "30d" });
+	resp.cookie("session", token, { maxAge: 1000 * 60 * 60 * 24 * 30 });
+	resp.json({
+		success: true,
+		data: data
+	});
+}
+
+export function authLogout(req, resp) {
+	res.clearCookie('session').json({
+		success: true,
 	});
 }

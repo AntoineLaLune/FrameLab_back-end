@@ -18,13 +18,13 @@ services:
     environment:
       MARIADB_ROOT_PASSWORD: example
     ports:
-      - 3306:3306
+      - 3308:3306
 
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - 8082:8080
 ```
 
 ---
