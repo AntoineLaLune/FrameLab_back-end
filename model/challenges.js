@@ -44,10 +44,10 @@ export async function getArchivesChallenges(is_active, limit, offset, rand) {
 }
 
 // POST
-export async function addChallenge(title, description, photo_url, start_date, end_date, creator_id,) {
+export async function addChallenge(title, description, image, start_date, end_date, creator_id,) {
 	return await db.insert(
-		"INSERT INTO challenges (title, description, photo_url, start_date, end_date, creator_id) VALUES (?, ?, ?, ?, ?, ?)",
-		[title, description, photo_url, start_date, end_date, creator_id]
+		"INSERT INTO challenges (title, description, image, start_date, end_date, creator_id) VALUES (?, ?, ?, ?, ?, ?)",
+		[title, description, image, start_date, end_date, creator_id]
 	);
 }
 

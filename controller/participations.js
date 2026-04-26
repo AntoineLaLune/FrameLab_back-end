@@ -19,7 +19,7 @@ export async function getParticipation(req, resp) {
 
 // POST
 export async function postParticipation(params) {
-	const data = await participationsModel.addParticipation(req.params.photo_url, req.params.challenge_id, req.params.user_id);
+	const data = await participationsModel.addParticipation(req.params.image, req.params.challenge_id, req.params.user_id);
 	resp.json({
 		success: true,
 		participations: data
