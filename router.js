@@ -6,6 +6,7 @@ import * as commentsController from "./controller/comments.js";
 import * as votesController from "./controller/votes.js";
 import * as usersController from "./controller/users.js";
 import * as authController from "./controller/auth.js";
+import * as submitsUtil from "./utils/submits.js";
 
 import { uploadChallengeImage, uploadParticipationImage } from "./multer.js";
 
@@ -320,13 +321,11 @@ router.get("/participations/:id", participationsController.getParticipation);
  *         multipart/form-data:
  *           schema:
  *             type: object
- *             required: [photo_url, user_id, challenge_id]
+ *             required: [image, challenge_id]
  *             properties:
- *               photo_url:
+ *               image:
  *                 type: string
  *                 format: binary
- *               user_id:
- *                 type: integer
  *               challenge_id:
  *                 type: integer
  *     responses:
@@ -337,7 +336,8 @@ router.get("/participations/:id", participationsController.getParticipation);
  */
 router.post("/participations",
 	authController.authBySession,
-	uploadParticipationImage.single("photo_url"),
+	submitsUtil.checkCurrentChallenges,
+	uploadParticipationImage.single("image"),
 	participationsController.postParticipation
 );
 

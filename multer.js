@@ -25,8 +25,7 @@ export const uploadChallengeImage = multer({ storage : challenge_storage, limits
     } else {
         cb("Seul ces formats d'images sont supportés : jpeg, jpg, png, gif)");
     }
-    }
-})
+}})
 
 const participation_storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -42,12 +41,11 @@ export const uploadParticipationImage = multer({ storage : participation_storage
     // Check format
     const filetypes = /jpeg|jpg|png|webp|gif/; // regex
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
+	const mimetype = filetypes.test(file.mimetype);
 
-    if (mimetype && extname) {
-        return cb(null, true);
-    } else {
-        cb("Seul ces formats d'images sont supportés : jpeg, jpg, png, gif)");
-    }
-    }
-})
+	if (mimetype && extname) {
+		return cb(null, true);
+	} else {
+		cb("Seul ces formats d'images sont supportés : jpeg, jpg, png, gif)");
+	}
+}})

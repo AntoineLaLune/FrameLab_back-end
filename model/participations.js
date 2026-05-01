@@ -65,10 +65,10 @@ export async function getParticipation(id) {
 }
 
 // POST
-export async function addParticipation(image, project_name, user_id) {
+export async function addParticipation(photo_url, challenge_id, user_id) {
 	return await db.insert(
-		"INSERT INTO participations (image, project_name, user_id) VALUES (?, ?, ?)",
-		[image, project_name, user_id]
+		"INSERT INTO participations (photo_url, challenge_id, user_id) VALUES (?, ?, ?)",
+		[photo_url, challenge_id, user_id]
 	);
 }
 
