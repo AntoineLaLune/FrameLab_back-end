@@ -336,8 +336,8 @@ router.get("/participations/:id", participationsController.getParticipation);
  */
 router.post("/participations",
 	authController.authBySession,
+	uploadParticipationImage.single("file"),
 	submitsUtil.checkCurrentChallenges,
-	uploadParticipationImage.single("image"),
 	participationsController.postParticipation
 );
 

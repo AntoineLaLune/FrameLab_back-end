@@ -18,7 +18,7 @@ export const uploadChallengeImage = multer({ storage : challenge_storage, limits
     // Check format
     const filetypes = /jpeg|jpg|png|webp|gif/; // regex
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
+    const mimetype = filetypes.test(file.mimetype) || file.mimetype === "image/*";
 
     if (mimetype && extname) {
         return cb(null, true);
@@ -41,7 +41,7 @@ export const uploadParticipationImage = multer({ storage : participation_storage
     // Check format
     const filetypes = /jpeg|jpg|png|webp|gif/; // regex
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-	const mimetype = filetypes.test(file.mimetype);
+	const mimetype = filetypes.test(file.mimetype) || file.mimetype === "image/*";
 
 	if (mimetype && extname) {
 		return cb(null, true);

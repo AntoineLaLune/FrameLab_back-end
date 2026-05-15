@@ -10,7 +10,6 @@ export async function getParticipations(req, resp) {
 }
 export async function getParticipation(req, resp) {
 	const data = await participationsModel.getParticipation(req.params.id);
-	console.log(data);
 	resp.json({
 		success: true,
 		participations: data
@@ -18,8 +17,8 @@ export async function getParticipation(req, resp) {
 }
 
 // POST
-export async function postParticipation(params) {
-	const data = await participationsModel.addParticipation("/participations/" + req.file.filename, req.params.challenge_id, req.user.id);
+export async function postParticipation(req, resp) {
+	const data = await participationsModel.addParticipation("/participations/" + req.file.filename, req.body.challenge_id, req.user.id);
 	resp.json({
 		success: true,
 		participations: data
