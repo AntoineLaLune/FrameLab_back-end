@@ -6,11 +6,17 @@ import * as usersUtils from "../utils/users.js";
 // GET
 export async function getUser(req, resp) {
 	const data = await usersModel.getUser(req.id);
-	resp.json(data);
+	resp.json({
+		success: true,
+		user: data
+	});
 }
 export async function getUserByEmail(req, resp) {
 	const data = await usersModel.getUserByEmail(req.email);
-	resp.json(data);
+	resp.json({
+		success: true,
+		user: data
+	});
 }
 
 // PUT

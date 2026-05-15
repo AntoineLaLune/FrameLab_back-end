@@ -2,11 +2,11 @@ import db from "../database.js";
 
 // GET
 export async function getUser(id) {
-	return await db.getrow("SELECT * FROM users WHERE id = ?", [parseInt(id, 10)]);
+	return await db.getrow("SELECT id, email, last_name, first_name, is_admin, inscription_date FROM users WHERE id = ?", [parseInt(id, 10)]);
 }
 export async function getUserByEmail(email) {
 	return await db.getrow(
-		"SELECT id, email, last_name, first_name, is_admin FROM users WHERE email = ?",
+		"SELECT id, email, last_name, first_name, is_admin, inscription_date FROM users WHERE email = ?",
 		[email]
 	);
 }
