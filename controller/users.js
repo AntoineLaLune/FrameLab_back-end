@@ -22,7 +22,7 @@ export async function getUserByEmail(req, resp) {
 // PUT
 export async function putUser(req, resp) {
 	// Check Password Is Correct
-	const passwordIsValid = await usersUtils.checkEmailIsNotUsed(req.body.password, req.body.email);
+	const passwordIsValid = await usersUtils.checkPassword(req.body.password, req.body.email);
 	if (!passwordIsValid.success) {
 		return resp.json(passwordIsValid);
 	} // Return l'erreur ainsi que le message qui vient avec
@@ -58,10 +58,15 @@ export async function putUser(req, resp) {
 		req.body.newFirstName._rawValue || req.body.newFirstName,
 		req.body.email._rawValue || req.body.email,
 	);
+
+	resp.json({
+		success: true,
+		message: "Modifications effectuées."
+	});
 }
 export async function putUserWithPassword(req, resp) {
 	// Check Password Is Correct
-	const passwordIsValid = await usersUtils.checkEmailIsNotUsed(req.body.password, req.body.email);
+	const passwordIsValid = await usersUtils.checkPassword(req.body.password, req.body.email);
 	if (!passwordIsValid.success) {
 		return resp.json(passwordIsValid);
 	} // Return l'erreur ainsi que le message qui vient avec
@@ -107,6 +112,7 @@ export async function putUserWithPassword(req, resp) {
 
 	resp.json({
 		success: true,
+		message: "Modifications effectuées."
 	});
 }
 

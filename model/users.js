@@ -17,6 +17,14 @@ export async function getUserPasswordByEmail(email) {
 	);
 }
 
+// POST
+export async function createUser(email, last_name, first_name, password) {
+	return await db.insert(
+		"INSERT INTO users (email, last_name, first_name, password) VALUES (?, ?, ?, ?)",
+		[email, last_name, first_name, password]
+	);
+}
+
 // PUT
 export async function updateUser(email, last_name, first_name, oldEmail) {
 	return await db.insert(
