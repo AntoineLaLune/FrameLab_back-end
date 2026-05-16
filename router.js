@@ -337,7 +337,8 @@ router.get("/participations/:id", participationsController.getParticipation);
 router.post("/participations",
 	authController.authBySession,
 	uploadParticipationImage.single("file"),
-	submitsUtil.checkCurrentChallenges,
+	submitsUtil.checkCurrentChallenges, // Multer is needed for the req to be present
+	submitsUtil.checkDoubleSubmit,
 	participationsController.postParticipation
 );
 

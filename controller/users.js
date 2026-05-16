@@ -122,5 +122,8 @@ export async function isUserAdmin(req, resp, next) {
 	next();
 }
 export async function getUserLoged(req, resp) { // Don't use a model, used by authBySession
-	resp.json(req.user);
+	resp.status(200).json({
+		success: true,
+		user: req.user
+	});
 }

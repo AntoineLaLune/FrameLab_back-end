@@ -32,6 +32,7 @@ export async function postComment(req, resp) {
 	);
 	resp.json({
 		success: true,
+		message: "Votre commentaire a bien était envoyé."
 	});
 }
 

@@ -94,7 +94,7 @@ export async function authByRegister(req, resp) {
 	});
 }
 
-export async function authVerify(req, resp) { // @TODO NOW
+export async function authVerify(req, resp) {
 	let token;
 	// Get the token
 	if (req.query.token) {

@@ -7,14 +7,14 @@ export async function getParticipations(user_id, challenge_id, limit, offset, cr
 
 	if (user_id) {
 		where_stmt = "WHERE p.user_id = ?";
-		params.push(user_id)
+		params.push(parseInt(user_id, 10))
 		if (challenge_id) {
 			where_stmt = where_stmt + " AND p.challenge_id = ?";
-			params.push(challenge_id)
+			params.push(parseInt(challenge_id, 10))
 		}
 	} else if (challenge_id) {
 		where_stmt = "WHERE p.challenge_id = ?";
-		params.push(challenge_id)
+		params.push(parseInt(challenge_id, 10))
 	}
 
 	if (created) {
@@ -25,11 +25,11 @@ export async function getParticipations(user_id, challenge_id, limit, offset, cr
 
 	if (limit) {
 		limit_stmt = "LIMIT ?";
-		params.push(limit);
+		params.push(parseInt(limit, 10));
 	}
 	if (offset) {
 		offset_stmt = "OFFSET ?";
-		params.push(offset);
+		params.push(parseInt(offset, 10));
 	}
 
 	return await db.getall(

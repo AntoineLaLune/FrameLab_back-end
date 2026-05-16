@@ -19,32 +19,28 @@ export async function getChallenge(id) {
 export async function getCurrentChallenge() {
 	return await db.getrow("SELECT * FROM challenges WHERE (is_active)");
 }
-export async function getArchivesChallenges(is_active, limit, offset, rand) {
+export async function getArchivesChallenges(limit, offset, rand) {
 	const params = [];
-	let is_active_stmt = "", rand_stmt = "", limit_stmt = "", offset_stmt = "";
-	if (is_active) {
-		is_active_stmt = "WHERE (is_active = 0)";
-		params.push(is_active)
-	}
+	let rand_stmt = "", limit_stmt = "", offset_stmt = "";
 	if (rand) {
 		rand_stmt = "ORDER BY RAND()";
 	}
 	if (limit) {
 		limit_stmt = "LIMIT ?";
-		params.push(limit);
+		params.push(parseInt(limit, 10));
 	}
 	if (offset) {
 		offset_stmt = "OFFSET ?";
-		params.push(offset);
+		params.push(parseInt(offset, 10));
 	}
 	return await db.getall(
-		`SELECT * FROM challenges ${is_active_stmt} ${rand_stmt} ${limit_stmt} ${offset_stmt}`,
+		`SELECT * FROM challenges WHERE (is_active = 0) ${rand_stmt} ${limit_stmt} ${offset_stmt}`,
 		params
 	);
 }
 
 // POST
-export async function addChallenge(title, description, image, start_date, end_date, creator_id,) {
+export async function addChallenge(title, description, image, start_date, end_date, creator_id) {
 	return await db.insert(
 		"INSERT INTO challenges (title, description, image, start_date, end_date, creator_id) VALUES (?, ?, ?, ?, ?, ?)",
 		[title, description, image, start_date, end_date, creator_id]
@@ -52,4 +48,9 @@ export async function addChallenge(title, description, image, start_date, end_da
 }
 
 // DEL
-// @TODO
+export async function removeChallenge(id) {
+	return await db.delete(
+		"DELETE FROM challenges WHERE id = ?",
+		[id]
+	);
+}

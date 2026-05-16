@@ -43,11 +43,12 @@ export async function postChallenge(req, resp) {
 	);
 	resp.json({
 		success: true,
+		message: "Le challenge a bien était envoyé."
 	});
 }
 
 // DEL
-export async function deleteChallenge(req, resp) { // @TODO → Inside the model
+export async function deleteChallenge(req, resp) {
 	await challengesModel.removeChallenge(req.params.id);
 	resp.json({
 		success: true,

@@ -7,14 +7,14 @@ export async function getComments(user_id, participation_id, limit, offset, crea
 
     if (user_id) {
         where_stmt = "WHERE c.user_id = ?";
-        params.push(user_id);
+        params.push(parseInt(user_id));
         if (participation_id) {
             where_stmt += " AND c.participation_id = ?";
-            params.push(participation_id);
+            params.push(parseInt(participation_id, 10));
         }
     } else if (participation_id) {
         where_stmt = "WHERE c.participation_id = ?";
-        params.push(participation_id);
+        params.push(parseInt(participation_id, 10));
     }
 
     if (created) {
@@ -25,11 +25,11 @@ export async function getComments(user_id, participation_id, limit, offset, crea
 
     if (limit) {
         limit_stmt = "LIMIT ?";
-        params.push(limit);
+        params.push(parseInt(limit, 10));
     }
     if (offset) {
         offset_stmt = "OFFSET ?";
-        params.push(offset);
+        params.push(parseInt(offset, 10));
     }
 
     const sql = `
@@ -46,29 +46,9 @@ export async function getComments(user_id, participation_id, limit, offset, crea
     return await db.getall(sql, params);
 }
 export async function getComment(id) {
-	const params = [];
-	let where_stmt = "";
-
-	if (id) {
-		where_stmt = "WHERE id = ?";
-		params.push(id)
-	} else {
-		if (user_id) {
-			where_stmt = "WHERE user_id = ?";
-			params.push(user_id)
-			if (participation_id) {
-				where_stmt = where_stmt + " AND participation_id = ?";
-				params.push(participation_id)
-			}
-		} else if (participation_id) {
-			where_stmt = "WHERE participation_id = ?";
-			params.push(participation_id)
-		}
-	}
-
 	return await db.getrow(
-		`SELECT * FROM comments ${where_stmt}`,
-		params
+		`SELECT * FROM comments WHERE id = ?`,
+		[id]
 	);
 }
 

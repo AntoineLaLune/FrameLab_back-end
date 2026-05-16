@@ -21,7 +21,7 @@ export async function postParticipation(req, resp) {
 	const data = await participationsModel.addParticipation("/participations/" + req.file.filename, req.body.challenge_id, req.user.id);
 	resp.json({
 		success: true,
-		participations: data
+		message: "Votre projet a bien était envoyé."
 	});
 }
 

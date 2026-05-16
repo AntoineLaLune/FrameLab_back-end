@@ -16,26 +16,6 @@ export async function getUserPasswordByEmail(email) {
 		[email]
 	);
 }
-// export async function getUserByLast_name(last_name) {
-// 	return await db.getrow(
-// 		"SELECT id, email, last_name, first_name, is_admin FROM users WHERE last_name = ?",
-// 		[last_name]
-// 	);
-// }
-// export async function getUserByFirst_name(first_name) {
-// 	return await db.getrow(
-// 		"SELECT id, email, last_name, first_name, is_admin FROM users WHERE last_name = ?",
-// 		[first_name]
-// 	);
-// }
-
-// POST
-// export async function createUser(email, last_name, first_name, password) {
-// 	return await db.insert(
-// 		"INSERT INTO users (email, last_name, first_name, password) VALUES (?, ?, ?, ?)",
-// 		[email, last_name, first_name, password]
-// 	);
-// }
 
 // PUT
 export async function updateUser(email, last_name, first_name, oldEmail) {

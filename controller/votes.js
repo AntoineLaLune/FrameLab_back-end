@@ -25,8 +25,7 @@ import * as votesModel from "../model/votes.js";
 
 // POST
 export async function postVote(req, resp) {
-	// @TODO
-	// Get participation
+	// @TODO Get participation
 	if (req.user.id) {
 
 	}
@@ -39,6 +38,7 @@ export async function postVote(req, resp) {
 	);
 	resp.json({
 		success: true,
+		message: "Votre vote a bien était envoyé."
 	});
 }
 
