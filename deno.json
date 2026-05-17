@@ -1,0 +1,22 @@
+{
+	"name": "back-end",
+	"version": "0.1.0",
+	"exports": "./index.js",
+	"tasks": {
+		"dev": "deno run --allow-all --env-file=.env --watch index.js",
+		"test": "deno run --allow-all --env-file=.env.test --watch index.js",
+		"serve": "deno run --allow-all --env-file=.env index.js"
+	},
+	"imports": {
+		"@std/path": "jsr:@std/path@^1.1.4",
+		"bcrypt": "npm:bcrypt@^6.0.0",
+		"cookie-parser": "npm:cookie-parser@^1.4.7",
+		"express": "npm:express@^5.2.1",
+		"jsonwebtoken": "npm:jsonwebtoken@^9.0.3",
+		"multer": "npm:multer@^2.1.1",
+		"mysql2-async": "npm:mysql2-async@^2.0.3",
+		"swagger-jsdoc": "npm:swagger-jsdoc@^6.2.8",
+		"swagger-ui-express": "npm:swagger-ui-express@^5.0.1",
+		"vue-router": "npm:vue-router@^5.0.7"
+	}
+}

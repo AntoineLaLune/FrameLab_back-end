@@ -4,6 +4,8 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import cookieParser from "cookie-parser";
 
+import * as path from "@std/path";
+
 const options = {
 	definition: {
 		openapi: "3.0.0",
@@ -27,25 +29,35 @@ const options = {
 					scheme: "bearer",
 					bearerFormat: "JWT",
 				},
-				security: {
-					bearerAuth: [],
-				},
 			},
+		},
+		security: {
+			bearerAuth: [],
 		},
 	},
 	apis: ["router.js"],
 };
 
 const openapiSpecification = swaggerJsdoc(options);
+const dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+
+// Back-end API routes
 app.use("/api", router);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 app.use("/uploads", express.static("uploads"));
 
-app.listen(3333);
+// Front-end Distrubution root route
+app.use(express.static(path.join(dirname, "dist")));
+
+// Front-end Distrubution routes
+app.use((_req, res) => res.sendFile(path.join(dirname, "dist/index.html")));
+
+// Server Port
+app.listen(Deno.env.get("PORT"));
 
 console.log("Running success");
 

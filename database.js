@@ -1,11 +1,11 @@
 import Database from "mysql2-async";
 
 const db = new Database({
-	host: process.env.DB_ADRESSE,
-	port: process.env.DB_PORT,
-	user: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	database: process.env.DB_NAME,
+	host: Deno.env.get("DB_ADRESSE"),
+	port: Deno.env.get("DB_PORT"),
+	user: Deno.env.get("DB_USER"),
+	password: Deno.env.get("DB_PASSWORD"),
+	database: Deno.env.get("DB_NAME"),
 	skiptzfix: true,
 	dateStrings: true,
 });

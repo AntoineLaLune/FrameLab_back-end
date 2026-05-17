@@ -19,7 +19,7 @@ export async function authByLogin(req, resp) {
 
 	const data = await usersModel.getUserByEmail(req.body.email);
 	// Return the token, valid for 30 days
-	const token = jwt.sign({ id: data.id }, process.env.SECRET_KEY, { expiresIn: "30d" });
+	const token = jwt.sign({ id: data.id }, Deno.env.get("SECRET_KEY"), { expiresIn: "30d" });
 	resp.cookie("session", token, { maxAge: 1000 * 60 * 60 * 24 * 2 });
 	resp.json({
 		success: true,
@@ -46,8 +46,8 @@ export async function authBySession(req, resp, next) {
 	let tokenData
 	// Verify if the token is valid with the secret key
 	try {
-		tokenData = jwt.verify(token, process.env.SECRET_KEY);
-	} catch (err) {
+		tokenData = jwt.verify(token, Deno.env.get("SECRET_KEY"));
+	} catch {
 		return resp.status(401).json({
 			success: false,
 			message: "Session invalide."
@@ -88,7 +88,7 @@ export async function authByRegister(req, resp) {
 
 	const data = await usersModel.getUserByEmail(req.body.email);
 	// Create a token, valid for 1 hour
-	jwt.sign({ id: data.id }, process.env.SECRET_KEY, { expiresIn: "1h" });
+	jwt.sign({ id: data.id }, Deno.env.get("SECRET_KEY"), { expiresIn: "1h" });
 	resp.json({
 		success: true,
 	});
@@ -109,8 +109,8 @@ export async function authVerify(req, resp) {
 	let tokenData
 	// Verify if the token is valid with the secret key
 	try {
-		tokenData = jwt.verify(token, process.env.SECRET_KEY);
-	} catch (err) {
+		tokenData = jwt.verify(token, Deno.env.get("SECRET_KEY"));
+	} catch {
 		resp.status(401).json({
 			success: false,
 			message: "Session invalide."
@@ -128,7 +128,7 @@ export async function authVerify(req, resp) {
 	}
 
 	// Return the token, valid for 30 days
-	token = jwt.sign({ id: data.id }, process.env.SECRET_KEY, { expiresIn: "30d" });
+	token = jwt.sign({ id: data.id }, Deno.env.get("SECRET_KEY"), { expiresIn: "30d" });
 	resp.cookie("session", token, { maxAge: 1000 * 60 * 60 * 24 * 30 });
 	resp.json({
 		success: true,
@@ -136,7 +136,7 @@ export async function authVerify(req, resp) {
 	});
 }
 
-export function authLogout(req, resp) {
+export function authLogout(_req, resp) {
 	resp.clearCookie('session');
 	resp.json({
 		success: true,
