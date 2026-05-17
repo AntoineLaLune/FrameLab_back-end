@@ -101,7 +101,7 @@ router.get("/auth/verify", authController.authVerify);
  *       200:
  *         description: Logout successful
  */
-router.post("/auth/logout", authController.authLogout);
+router.post("/auth/logout", authController.authBySession, authController.authLogout);
 
 /**
  * @openapi

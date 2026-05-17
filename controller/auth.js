@@ -137,7 +137,9 @@ export async function authVerify(req, resp) {
 }
 
 export function authLogout(req, resp) {
-	res.clearCookie('session').json({
+	resp.clearCookie('session');
+	resp.json({
 		success: true,
+		message: 'Déconnexion réussie.'
 	});
 }
